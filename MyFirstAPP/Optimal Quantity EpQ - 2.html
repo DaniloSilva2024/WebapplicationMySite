@@ -1,0 +1,142 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPQ Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <h1>Economic Production Quantity (EPQ) Calculator</h1>
+    <label for="demand">Annual Quantity Demanded:</label>
+    <input type="number" id="demand" min="0">
+    <label for="productionCost">Cost of Production Run:</label>
+    <input type="number" id="productionCost" min="0">
+    <label for="holdingCost">Holding Cost per Unit:</label>
+    <input type="number" id="holdingCost" min="0" step="0.01">
+    <label for="productionRate">Production Rate:</label>
+    <input type="number" id="productionRate" min="0">
+    <button onclick="calculateEPQ()">Calculate</button>
+    <button onclick="resetForm()">Reset</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    function calculateEPQ() {
+        var D = parseFloat(document.getElementById("demand").value) || 0;
+        var K = parseFloat(document.getElementById("productionCost").value) || 0;
+        var H = parseFloat(document.getElementById("holdingCost").value) || 0;
+        var P = parseFloat(document.getElementById("productionRate").value) || 0;
+
+        var result = EPQ(D, P, K, H);
+
+        if (result) {
+            var resultHtml = "<h2>EPQ Result</h2>";
+            resultHtml += "<table>";
+            resultHtml += "<tr><th>Variable</th><th>Value</th></tr>";
+            resultHtml += "<tr><td>Optimal Lot Size (Q)</td><td>" + result[0].toFixed(2) + " units</td></tr>";
+            resultHtml += "<tr><td>Cycle Length</td><td>" + result[1].toFixed(2) + " months</td></tr>";
+            resultHtml += "<tr><td>Number of Production Runs</td><td>" + result[2].toFixed(2) + " per year</td></tr>";
+            resultHtml += "<tr><td>Production Run Length</td><td>" + result[3].toFixed(2) + " months</td></tr>";
+            resultHtml += "<tr><td>Demand Period Length</td><td>" + result[4].toFixed(2) + " months</td></tr>";
+            resultHtml += "<tr><td>Annual Production Cost</td><td>$" + result[5].toFixed(2) + "</td></tr>";
+            resultHtml += "<tr><td>Annual Holding Cost</td><td>$" + result[6].toFixed(2) + "</td></tr>";
+            resultHtml += "<tr><td>Maximum Inventory Level</td><td>" + result[7].toFixed(2) + " units</td></tr>";
+            resultHtml += "<tr><td>Annual Total Cost</td><td>$" + result[8].toFixed(2) + "</td></tr>";
+            resultHtml += "</table>";
+
+            document.getElementById("result").innerHTML = resultHtml;
+        }
+    }
+
+    function resetForm() {
+        document.getElementById("demand").value = "";
+        document.getElementById("productionCost").value = "";
+        document.getElementById("holdingCost").value = "";
+        document.getElementById("productionRate").value = "";
+        document.getElementById("result").innerHTML = "";
+    }
+
+    function EPQ(D, P, K, H) {
+        if (D > 0 && P > 0 && K > 0 && H > 0) {
+            var Q = Math.sqrt((2 * D * K) / (H * (1 - (D / P))));
+            var cycle_length = Q / D * 12;
+            var number_of_production_runs = D / Q;
+            var production_run_length = Q / P;
+            var demand_period_length = Q / D - Q / P;
+            var annual_production_cost = number_of_production_runs * K;
+            var annual_holding_cost = Q / 2 * (1 - (D / P)) * H;
+            var maximum_inventory_level = Q * (1 - (D / P));
+            var annual_total_cost = annual_production_cost + annual_holding_cost;
+
+            return [Q, cycle_length, number_of_production_runs, production_run_length, demand_period_length, annual_production_cost, annual_holding_cost, maximum_inventory_level, annual_total_cost];
+        } else {
+            console.error("Error: All function arguments must be non-negative.");
+            return null;
+        }
+    }
+</script>
+</body>
+</html>
+
