@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            width: 400px;
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: left;
+        }
+        #randomAmount {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div id="randomAmount"></div>
+    <div id="guessSection" style="display: none;">
+        <h1>Guess the Number of Bills and Coins</h1>
+        <label for="twentyInput">Twenty Franc Bills:</label>
+        <input type="number" id="twentyInput"><br>
+        <label for="tenInput">Ten Franc Bills:</label>
+        <input type="number" id="tenInput"><br>
+        <label for="fiveInput">Five Franc Coins:</label>
+        <input type="number" id="fiveInput"><br>
+        <label for="twoInput">Two Franc Coins:</label>
+        <input type="number" id="twoInput"><br>
+        <label for="oneInput">One Franc Coins:</label>
+        <input type="number" id="oneInput"><br>
+        <label for="fiftyRappenInput">Fifty Rappen Coins:</label>
+        <input type="number" id="fiftyRappenInput"><br>
+        <label for="twentyRappenInput">Twenty Rappen Coins:</label>
+        <input type="number" id="twentyRappenInput"><br>
+        <label for="tenRappenInput">Ten Rappen Coins:</label>
+        <input type="number" id="tenRappenInput"><br>
+        <button onclick="checkGuess()">Check Guess</button>
+        <button onclick="resetGame()">Reset Game</button>
+    </div>
+    <div id="result"></div>
+</div>
+
+<script>
+    function getRandomAmount() {
+        // Generate a random amount between 10 and 500
+        return Math.floor(Math.random() * 491) + 10;
+    }
+
+    function displayRandomAmount() {
+        var randomAmountDiv = document.getElementById("randomAmount");
+        var randomAmount = getRandomAmount();
+        randomAmountDiv.textContent = "Random Amount: " + randomAmount.toFixed(2) + " Francs";
+        document.getElementById("guessSection").style.display = "block";
+    }
+
+    function checkGuess() {
+        var correctAnswers = {
+            twenty: Math.floor(getRandomAmount() / 20),
+            ten: Math.floor((getRandomAmount() % 20) / 10),
+            five: Math.floor(((getRandomAmount() % 20) % 10) / 5),
+            two: Math.floor((((getRandomAmount() % 20) % 10) % 5) / 2),
+            one: Math.floor(((((getRandomAmount() % 20) % 10) % 5) % 2) / 1),
+            fiftyRappen: Math.floor((getRandomAmount() % 1) / 0.5),
+            twentyRappen: Math.floor(((getRandomAmount() % 1) % 0.5) / 0.2),
+            tenRappen: Math.floor((((getRandomAmount() % 1) % 0.5) % 0.2) / 0.1)
+        };
+
+        var userAnswers = {
+            twenty: parseInt(document.getElementById("twentyInput").value),
+            ten: parseInt(document.getElementById("tenInput").value),
+            five: parseInt(document.getElementById("fiveInput").value),
+            two: parseInt(document.getElementById("twoInput").value),
+            one: parseInt(document.getElementById("oneInput").value),
+            fiftyRappen: parseInt(document.getElementById("fiftyRappenInput").value),
+            twentyRappen: parseInt(document.getElementById("twentyRappenInput").value),
+            tenRappen: parseInt(document.getElementById("tenRappenInput").value)
+        };
+
+        var resultDiv = document.getElementById("result");
+
+        var allCorrect = true;
+        var resultMessage = "<h2>Result:</h2><ul>";
+
+        for (var key in correctAnswers) {
+            if (correctAnswers[key] !== userAnswers[key]) {
+                allCorrect = false;
+            }
+            resultMessage += "<li>" + key.charAt(0).toUpperCase() + key.slice(1) + ": " + userAnswers[key] + " (Correct: " + correctAnswers[key] + ")</li>";
+        }
+
+        resultMessage += "</ul>";
+
+        if (allCorrect) {
+            resultMessage += "<p>Congratulations! Your guess is correct.</p>";
+        } else {
+            resultMessage += "<p>Oops! Your guess is incorrect. Please try again.</p>";
+        }
+
+        resultDiv.innerHTML = resultMessage;
+    }
+
+    function resetGame() {
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("guessSection").style.display = "none";
+        for (var i = 0; i < 8; i++) {
+            document.getElementsByTagName("input")[i].value = "";
+        }
+        displayRandomAmount();
+    }
+
+    displayRandomAmount();
+</script>
+</body>
+</html>
+

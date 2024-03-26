@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333333;
+        }
+
+        p {
+            color: #666666;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            width: 100px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Guessing Game</h1>
+    <p>I'm thinking of a number between 1 and 10. Guess what it is:</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess">
+    <br>
+    <button onclick="checkGuess()">Submit Guess</button>
+    <p id="result"></p>
+</div>
+
+<script>
+    function checkGuess() {
+        const MAX = 10;
+        const answer = Math.floor(Math.random() * MAX) + 1;
+        const guessInput = document.getElementById("guessInput");
+        const guess = parseInt(guessInput.value);
+        const result = document.getElementById("result");
+
+        if (isNaN(guess) || guess < 1 || guess > MAX) {
+            result.textContent = "Please enter a valid number between 1 and " + MAX + ".";
+            return;
+        }
+
+        if (guess === answer)
+            result.textContent = "You got it! Good guessing!";
+        else {
+            result.textContent = "That is not correct, sorry. The number was " + answer + ".";
+        }
+    }
+</script>
+</body>
+</html>

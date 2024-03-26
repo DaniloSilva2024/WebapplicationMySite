@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Time Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+        }
+        input[type="number"] {
+            width: calc(100% - 80px);
+            padding: 8px;
+            margin: 5px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+        .button-container {
+            text-align: center;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Travel Time Calculator</h1>
+    <label for="distance">Enter the distance:</label>
+    <input type="number" id="distance" step="0.01">
+    <select id="unit">
+        <option value="km">Kilometers</option>
+        <option value="miles">Miles</option>
+    </select>
+    <div class="button-container">
+        <button id="calculateButton">Calculate</button>
+        <button id="resetButton">Reset</button>
+    </div>
+    <table id="resultTable">
+        <tr>
+            <th>Mode of Transport</th>
+            <th>Time (km)</th>
+            <th>Time (miles)</th>
+        </tr>
+    </table>
+</div>
+<script>
+    document.getElementById('calculateButton').addEventListener('click', function() {
+        var distance = parseFloat(document.getElementById('distance').value);
+        if (isNaN(distance) || distance <= 0) {
+            alert("Please enter a positive number for distance.");
+            return;
+        }
+
+        var unit = document.getElementById('unit').value;
+        var milesPerKm = 0.621371; // Conversion factor from kilometers to miles
+        var distanceKm, distanceMiles;
+
+        if (unit === 'km') {
+            distanceKm = distance;
+            distanceMiles = distance * milesPerKm;
+        } else {
+            distanceMiles = distance;
+            distanceKm = distance / milesPerKm;
+        }
+
+        var speedPedestrian = 5;
+        var speedBike = 15;
+        var speedEBike = 25;
+        var speedCar = 45;
+
+        var results = [
+            { mode: 'On foot', speed: speedPedestrian },
+            { mode: 'By bike', speed: speedBike },
+            { mode: 'By E-bike', speed: speedEBike },
+            { mode: 'By Car', speed: speedCar }
+        ];
+
+        var tableHTML = "<tr><th>Mode of Transport</th><th>Time (km)</th><th>Time (miles)</th></tr>";
+        for (var i = 0; i < results.length; i++) {
+            var timeKm = Math.round((distanceKm / results[i].speed) * 60);
+            var timeMiles = Math.round((distanceMiles / results[i].speed) * 60);
+
+            tableHTML += "<tr>";
+            tableHTML += "<td>" + results[i].mode + "</td>";
+            tableHTML += "<td>" + timeKm + " minutes</td>";
+            tableHTML += "<td>" + timeMiles + " minutes</td>";
+            tableHTML += "</tr>";
+        }
+
+        document.getElementById('resultTable').innerHTML = tableHTML;
+    });
+
+    document.getElementById('resetButton').addEventListener('click', function() {
+        document.getElementById('distance').value = '';
+        document.getElementById('unit').value = 'km';
+        document.getElementById('resultTable').innerHTML = "<tr><th>Mode of Transport</th><th>Time (km)</th><th>Time (miles)</th></tr>";
+    });
+</script>
+</body>
+</html>
+

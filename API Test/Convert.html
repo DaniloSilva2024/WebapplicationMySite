@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guessing Game</title>
+</head>
+<body>
+<h1>Guessing Game</h1>
+<p>I'm thinking of a number between 1 and 10. Guess what it is:</p>
+<input type="number" id="guessInput">
+<button onclick="checkGuess()">Submit Guess</button>
+<p id="result"></p>
+
+<script>
+    function checkGuess() {
+        const MAX = 10;
+        const answer = Math.floor(Math.random() * MAX) + 1;
+        const guessInput = document.getElementById("guessInput");
+        const guess = parseInt(guessInput.value);
+
+        const result = document.getElementById("result");
+
+        if (guess === answer)
+            result.textContent = "You got it! Good guessing!";
+        else {
+            result.textContent = "That is not correct, sorry. The number was " + answer + ".";
+        }
+    }
+</script>
+</body>
+</html>
