@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolBox - Your Daily Companion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        #header {
+            text-align: left;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            position: relative;
+        }
+        #logo {
+            width: 33.33%; /* One third of the width */
+        }
+        #title {
+            font-size: 50px;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #slogan {
+            font-size: 25px;
+            color: white;
+            margin-top: 10px;
+        }
+        #content {
+            margin: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        #info {
+            width: 45%;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        #form {
+            width: 45%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="email"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"], input[type="reset"], button {
+            width: calc(50% - 5px);
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        input[type="submit"]:hover, input[type="reset"]:hover, button:hover {
+            background-color: #45a049;
+        }
+        #login {
+            text-align: center;
+        }
+        #login-btn {
+            background-color: #007bff;
+        }
+        #login-btn:hover {
+            background-color: #0056b3;
+        }
+        .error {
+            border: 1px solid red;
+        }
+        .error-message {
+            color: red;
+        }
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        p {
+            margin: 0 0 10px 0;
+        }
+        .powerful-calculators {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .simplify-finances {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+    <img id="logo" src="MyFirstAPP/Family%20Bank%20Main%20Image.jpg" alt="ToolBox Logo">
+    <h1 id="title">Welcome to ToolBox</h1>
+    <p id="slogan">Your Daily Companion</p>
+</div>
+<div id="content">
+    <div id="info">
+        <h2>About ToolBox</h2>
+        <p>Financial Toolbox is a free app that puts you in control of your finances. It's like having a personal financial coach in your pocket, helping you with everyday tasks and long-term goals.</p>
+        <p class="powerful-calculators">Powerful Calculators at Your Fingertips:</p>
+        <p>Investment Calculator: Figure out potential returns on your investments.</p>
+        <p>Mortgage Calculator: Easily estimate your monthly mortgage payments.</p>
+        <p>Loan Calculator: Compare loan options and make informed borrowing decisions.</p>
+        <p>Present & Future Value Calculator: Understand the time value of money.</p>
+        <p>Retirement Planner: Start planning for a secure and comfortable retirement today.</p>
+        <p>And More to Come! The Financial Toolbox team is constantly adding new features to help you manage your money even better.</p>
+        <p class="simplify-finances">Simplify Your Finances in One Place:</p>
+        <p>Stop juggling multiple apps. Financial Toolbox combines all your essential financial tools in one convenient location. Download Financial Toolbox for free and start your journey to financial success today!</p>
+    </div>
+    <div id="form">
+        <form action="MyFirstAPP\ToolBox Portal 2.html" method="get" onsubmit="return validateForm()">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" required><br>
+            <label for="email">Email:</label><br>
+            <input type="email" id="email" name="email" required><br>
+            <input type="submit" value="Sign in">
+            <input type="reset" value="Reset">
+            <div id="login">
+                <button id="login-btn">Log in</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function validateForm() {
+        var name = document.getElementById("name");
+        var email = document.getElementById("email");
+
+        if (name.value.trim() === "" && email.value.trim() === "") {
+            name.classList.add("error");
+            email.classList.add("error");
+            return false;
+        }
+
+        if (email.value.trim() === "") {
+            email.classList.add("error");
+            return false;
+        }
+
+        var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email.value.trim())) {
+            email.classList.add("error");
+            document.getElementById("error-message").innerText = "Please enter a valid email";
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</body>
+</html>

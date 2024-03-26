@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Fund Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        input {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Peace of Mind: Building Your Family's Emergency Fund</h1>
+    <form id="emergencyFundForm">
+        <h2>How to Build Your Emergency Fund:</h2>
+        <h3>Step 1: Calculate Your Monthly Expenses</h3>
+        <label for="housingInput">Housing (rent/mortgage, property taxes, homeowners insurance):</label>
+        <input type="number" id="housingInput" placeholder="Enter amount" required><br>
+        <label for="utilitiesInput">Utilities (electricity, gas, water, trash):</label>
+        <input type="number" id="utilitiesInput" placeholder="Enter amount" required><br>
+        <label for="groceriesInput">Groceries and household supplies:</label>
+        <input type="number" id="groceriesInput" placeholder="Enter amount" required><br>
+        <label for="transportationInput">Transportation (car payment, gas, insurance, public transport):</label>
+        <input type="number" id="transportationInput" placeholder="Enter amount" required><br>
+        <label for="debtInput">Debt minimum payments:</label>
+        <input type="number" id="debtInput" placeholder="Enter amount" required><br>
+        <label for="otherInput">Other essentials (childcare, medications, etc.):</label>
+        <input type="number" id="otherInput" placeholder="Enter amount" required><br>
+        <h3>Total Monthly Expenses: <span id="totalExpenses"></span></h3>
+
+        <h3>Step 2: Emergency Fund Goal</h3>
+        <label for="monthsInput">We want to cover <span id="monthsText"></span> months of expenses (choose 3 or 6).</label>
+        <select id="monthsInput" required>
+            <option value="3">3 months</option>
+            <option value="6">6 months</option>
+        </select>
+
+        <h3>Step 3: Target Emergency Fund Amount</h3>
+        <p>Total Monthly Expenses (from Step 1) x Number of Months (from Step 2) = Emergency Fund Goal ($<span id="emergencyFundGoal"></span>)</p>
+
+        <h3>Step 4: Track Your Progress</h3>
+        <label for="progressInput">Monitor your emergency fund balance regularly.</label>
+        <input type="text" id="progressInput" placeholder="Enter your progress"><br>
+
+        <button type="button" onclick="calculate()">Calculate</button>
+        <button type="button" onclick="resetForm()">Reset</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    function resetForm() {
+        document.getElementById("emergencyFundForm").reset();
+        document.getElementById("result").innerHTML = "";
+    }
+
+    function calculate() {
+        var housing = parseFloat(document.getElementById("housingInput").value);
+        var utilities = parseFloat(document.getElementById("utilitiesInput").value);
+        var groceries = parseFloat(document.getElementById("groceriesInput").value);
+        var transportation = parseFloat(document.getElementById("transportationInput").value);
+        var debt = parseFloat(document.getElementById("debtInput").value);
+        var other = parseFloat(document.getElementById("otherInput").value);
+
+        var totalExpenses = housing + utilities + groceries + transportation + debt + other;
+        document.getElementById("totalExpenses").textContent = "$" + totalExpenses.toFixed(2);
+
+        var months = parseInt(document.getElementById("monthsInput").value);
+        document.getElementById("monthsText").textContent = months + " months";
+
+        var emergencyFundGoal = totalExpenses * months;
+        document.getElementById("emergencyFundGoal").textContent = emergencyFundGoal.toFixed(2);
+
+        var progress = document.getElementById("progressInput").value;
+        if (progress !== "") {
+            var remaining = emergencyFundGoal - parseFloat(progress);
+            if (remaining <= 0) {
+                document.getElementById("result").innerHTML = "<p>Congratulations! You've reached your emergency fund goal!</p>";
+            } else {
+                document.getElementById("result").innerHTML = "<p>You still need to save $" + remaining.toFixed(2) + " to reach your emergency fund goal.</p>";
+            }
+        } else {
+            document.getElementById("result").innerHTML = "<p>Enter your progress to track your emergency fund.</p>";
+        }
+    }
+</script>
+</body>
+</html>

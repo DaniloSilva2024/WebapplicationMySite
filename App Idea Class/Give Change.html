@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giving Change Solution</title>
+    <script src="script.js"></script>
+</head>
+<body>
+<h1>Giving Change Solution</h1>
+<form id="changeForm">
+    <label for="amount">Enter amount: </label>
+    <input type="number" id="amount" step="0.01" required>
+    <button type="submit">Calculate</button>
+</form>
+<div id="result"></div>
+
+<script>
+    document.getElementById('changeForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const amount = parseFloat(document.getElementById('amount').value);
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = '';
+
+        // Function to calculate the number of bills and coins required
+        function calculateChange(amount) {
+            let change = '';
+            let remainingAmount = amount;
+
+            // Swiss francs
+            const swissFrancs = [20, 10, 5, 2, 1];
+            const swissFrancNames = ['Twenty franc bills', 'Ten franc bills', 'Five franc coins', 'Two franc coins', 'One franc coins'];
+
+            swissFrancs.forEach(function(bill, index) {
+                const num = Math.floor(remainingAmount / bill);
+                remainingAmount -= num * bill;
+                change += `${swissFrancNames[index]}: ${num}<br>`;
+            });
+
+            // Rappen
+            remainingAmount *= 100; // Convert to rappen
+            const rappenCoins = [50, 20, 10];
+            const rappenCoinNames = ['Fifty rappen coins', 'Twenty rappen coins', 'Ten rappen coins'];
+
+            rappenCoins.forEach(function(coin, index) {
+                const num = Math.floor(remainingAmount / coin);
+                remainingAmount -= num * coin;
+                change += `${rappenCoinNames[index]}: ${num}<br>`;
+            });
+
+            resultDiv.innerHTML = change;
+        }
+
+        calculateChange(amount);
+    });
+</script>
+</body>
+</html>

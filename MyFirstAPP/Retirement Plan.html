@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retirement Planner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: left;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #333;
+    }
+    label {
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: block;
+    }
+    input {
+      padding: 8px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: calc(100% - 22px);
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    #results {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Building Your Family's Dream Retirement: A Comprehensive Guide</h1>
+  <form id="retirementPlannerForm">
+    <h2>Step 1: Define Your Retirement Goals</h2>
+    <label for="lifestyleInput">Lifestyle:</label>
+    <input type="text" id="lifestyleInput" placeholder="Describe your ideal retirement lifestyle"><br>
+    <label for="ageInput">Age:</label>
+    <input type="number" id="ageInput" placeholder="Enter your desired retirement age"><br>
+    <label for="incomeInput">Income:</label>
+    <input type="number" id="incomeInput" placeholder="Estimate your retirement income"><br>
+
+    <h2>Step 2: Calculate Your Retirement Expenses</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Category</th>
+        <th>Monthly Cost</th>
+        <th>Annual Cost</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td>Housing</td>
+        <td><input type="number" id="housingCost" placeholder="Enter monthly cost"></td>
+        <td id="housingAnnual"> </td>
+      </tr>
+      <tr>
+        <td>Utilities</td>
+        <td><input type="number" id="utilitiesCost" placeholder="Enter monthly cost"></td>
+        <td id="utilitiesAnnual"> </td>
+      </tr>
+      <tr>
+        <td>Groceries</td>
+        <td><input type="number" id="groceriesCost" placeholder="Enter monthly cost"></td>
+        <td id="groceriesAnnual"> </td>
+      </tr>
+      <tr>
+        <td>Healthcare</td>
+        <td><input type="number" id="healthcareCost" placeholder="Enter monthly cost"></td>
+        <td id="healthcareAnnual"> </td>
+      </tr>
+      <tr>
+        <td>Transportation</td>
+        <td><input type="number" id="transportationCost" placeholder="Enter monthly cost"></td>
+        <td id="transportationAnnual"> </td>
+      </tr>
+      <tr>
+        <td>Travel</td>
+        <td><input type="number" id="travelCost" placeholder="Enter monthly cost"></td>
+        <td id="travelAnnual"> </td>
+      </tr>
+      <tr>
+        <td>Hobbies/Entertainment</td>
+        <td><input type="number" id="hobbiesCost" placeholder="Enter monthly cost"></td>
+        <td id="hobbiesAnnual"> </td>
+         <tr>
+        <td><strong>Total</strong></td>
+        <td id="totalMonthly"> </td>
+        <td id="totalAnnual"> </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <h2>Step 3: Assess Your Current Financial Situation</h2>
+    <label for="debtInput">Debt:</label>
+    <input type="number" id="debtInput" placeholder="Enter total debt"><br>
+    <label for="savingsInput">Savings and Investments:</label>
+    <input type="number" id="savingsInput" placeholder="Enter total savings"><br>
+    <label for="socialSecurityInput">Social Security Benefits:</label>
+    <input type="number" id="socialSecurityInput" placeholder="Estimate Social Security benefits"><br>
+
+    <h2>Step 4: Bridge the Gap</h2>
+    <p>The difference between your estimated retirement income and expenses is your retirement funding gap.</p>
+
+    <h2>Step 5: Invest for Retirement</h2>
+    <p>Develop an investment strategy based on your age, risk tolerance, and time horizon.</p>
+
+    <h2>Step 6: Continuously Review and Adjust</h2>
+    <p>Review and adjust your retirement plan as life circumstances and market conditions change.</p>
+
+    <div>
+      <button type="button" onclick="calculateRetirement()">Calculate Retirement Needs</button>
+      <button type="button" onclick="resetForm()">Reset</button>
+      <button type="button" onclick="exportToExcel()">Export Report (Excel)</button>
+    </div>
+  </form>
+  <div id="results"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+
+  <script>
+    function calculateRetirement() {
+    // Gather user input
+    var desiredRetirementAge = parseInt(document.getElementById("ageInput").value);
+    var annualIncome = parseFloat(document.getElementById("incomeInput").value) * 12;
+
+    // Calculate annual expenses
+    var annualHousingCost = parseFloat(document.getElementById("housingCost").value) * 12;
+    var annualUtilitiesCost = parseFloat(document.getElementById("utilitiesCost").value) * 12;
+    var annualGroceriesCost = parseFloat(document.getElementById("groceriesCost").value) * 12;
+    var annualHealthcareCost = parseFloat(document.getElementById("healthcareCost").value) * 12;
+    var annualTransportationCost = parseFloat(document.getElementById("transportationCost").value) * 12;
+    var annualTravelCost = parseFloat(document.getElementById("travelCost").value) * 12;
+    var annualHobbiesCost = parseFloat(document.getElementById("hobbiesCost").value) * 12;
+
+    // Calculate total annual expenses
+    var totalAnnualExpenses = annualHousingCost + annualUtilitiesCost + annualGroceriesCost +
+    annualHealthcareCost + annualTransportationCost + annualTravelCost +
+    annualHobbiesCost;
+
+    // Calculate retirement gap
+    var annualGap = annualIncome - totalAnnualExpenses;
+
+    // Display results
+    var resultText = "<strong>Retirement Planning Summary:</strong><br>";
+    resultText += "Desired Retirement Age: " + desiredRetirementAge + "<br>";
+    resultText += "Estimated Annual Income: $" + annualIncome.toFixed(2) + "<br>";
+    resultText += "Total Annual Expenses: $" + totalAnnualExpenses.toFixed(2) + "<br>";
+    resultText += "Annual Retirement Gap: $" + annualGap.toFixed(2) + "<br>";
+    document.getElementById("results").innerHTML = resultText;
+  }
+
+    function resetForm() {
+      // Reset form fields
+      document.getElementById("retirementPlannerForm").reset();
+      // Clear results
+      document.getElementById("results").innerHTML = "";
+    }
+    function exportToExcel() {
+      // Gather form data
+      var formData = new FormData(document.getElementById("retirementPlannerForm"));
+
+      // Create array to hold form data
+      var data = [];
+
+      // Loop through form data and push key-value pairs to array
+      for (var pair of formData.entries()) {
+        data.push(pair);
+      }
+
+      // Add calculation results as a new row
+      data.push(["", ""]); // Empty row for spacing
+      data.push(["Retirement Planning Summary:"]);
+      data.push(["Field", "Data"]); // Header row
+      data.push(["Desired Retirement Age", document.getElementById("ageInput").value]);
+      data.push(["Estimated Annual Income", "$" + parseFloat(document.getElementById("incomeInput").value).toFixed(2)]);
+      // Add more fields as needed
+
+      // Add calculation results
+      var resultHTML = document.getElementById("results").innerHTML;
+      var resultLines = resultHTML.split("<br>");
+      for (var line of resultLines) {
+        var parts = line.split(": ");
+        if (parts.length === 2) {
+          data.push([parts[0], parts[1]]);
+        }
+      }
+
+      // Convert data to worksheet
+      var ws = XLSX.utils.aoa_to_sheet(data);
+
+      // Save workbook as Excel file
+      var wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Retirement Report");
+
+      // Write file
+      XLSX.writeFile(wb, "retirement_report.xlsx");
+    }
+</script>
+
+
+</body>
+</html>
+

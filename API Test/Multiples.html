@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiples Printer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        input {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Multiples Printer</h1>
+    <form id="multiplesForm">
+        <label for="valueInput">Enter a positive value:</label>
+        <input type="number" id="valueInput" placeholder="Enter Positive Value" required><br>
+        <label for="limitInput">Enter an upper limit:</label>
+        <input type="number" id="limitInput" placeholder="Enter Upper Limit" required><br>
+        <button type="submit">Print Multiples</button>
+        <button type="button" onclick="resetForm()">Reset</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    function resetForm() {
+        document.getElementById("multiplesForm").reset();
+        document.getElementById("result").innerHTML = "";
+    }
+
+    document.getElementById("multiplesForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var value = parseInt(document.getElementById("valueInput").value);
+        var limit = parseInt(document.getElementById("limitInput").value);
+
+        var result = "<p>The multiples of " + value + " between " +
+            value + " and " + limit + " (inclusive) are:</p><p>";
+
+        var count = 0;
+        for (var mult = value; mult <= limit; mult += value) {
+            result += mult + "\t";
+            count++;
+            if (count % 5 == 0) {
+                result += "<br>";
+            }
+        }
+        result += "</p>";
+        document.getElementById("result").innerHTML = result;
+    });
+</script>
+</body>
+</html>

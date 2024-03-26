@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Value of Money Calculator</title>
+    <style>
+        /* CSS styles remain unchanged */
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Time Value of Money Calculator</h1>
+    <form id="tvmForm">
+        <label for="calculationType">Calculation Type:</label>
+        <select id="calculationType">
+            <option value="presentValue">Present Value</option>
+            <option value="futureValue">Future Value</option>
+        </select><br>
+        <label for="presentYearInput">Present Year:</label>
+        <input type="number" id="presentYearInput" placeholder="Enter Present Year" required><br>
+        <label for="futureYearInput">Future Year:</label>
+        <input type="number" id="futureYearInput" placeholder="Enter Future Year" required><br>
+        <label for="principalInput">Principal:</label>
+        <input type="number" id="principalInput" placeholder="Enter Present Value" required><br>
+        <label for="interestInput">Annual Interest Rate (%):</label>
+        <input type="number" id="interestInput" step="0.01" placeholder="Enter Annual Interest Rate" required><br>
+        <button type="submit">Calculate</button>
+        <button type="button" onclick="resetForm()">Reset</button>
+        <button type="button" onclick="exportToExcel()" id="exportButton" style="display: none;">Export to Excel</button>
+    </form>
+    <div id="result"></div>
+    <table id="tvmTable" style="display: none;">
+        <thead>
+        <tr>
+            <th>Year</th>
+            <th>January</th>
+            <th>February</th>
+            <th>March</th>
+            <th>April</th>
+            <th>May</th>
+            <th>June</th>
+            <th>July</th>
+            <th>August</th>
+            <th>September</th>
+            <th>October</th>
+            <th>November</th>
+            <th>December</th>
+        </tr>
+        </thead>
+        <tbody id="tvmTableBody"></tbody>
+    </table>
+</div>
+
+<script>
+    function resetForm() {
+        document.getElementById("tvmForm").reset();
+        document.getElementById("result").innerHTML = "";
+        document.getElementById("tvmTable").style.display = "none";
+        document.getElementById("exportButton").style.display = "none";
+    }
+
+    function exportToExcel() {
+        var tableHtml = document.getElementById("tvmTable").outerHTML;
+        var blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel' });
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'tvm_table.xls';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+
+    document.getElementById("tvmForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        var calculationType = document.getElementById("calculationType").value;
+        var presentYear = parseInt(document.getElementById("presentYearInput").value);
+        var futureYear = parseInt(document.getElementById("futureYearInput").value);
+        var principal = parseFloat(document.getElementById("principalInput").value);
+        var annualInterestRate = parseFloat(document.getElementById("interestInput").value);
+
+        var monthsInYear = 12;
+        var percent = 100;
+        var monthlyInterestRate = annualInterestRate / percent / monthsInYear;
+        var totalTerm = (futureYear - presentYear) * monthsInYear;
+
+        var tableBody = document.getElementById("tvmTableBody");
+        tableBody.innerHTML = "";
+
+        for (var year = presentYear; year <= futureYear; year++) {
+            var newRow = document.createElement("tr");
+            var yearCell = document.createElement("td");
+            yearCell.textContent = year;
+            newRow.appendChild(yearCell);
+
+            for (var month = 1; month <= monthsInYear; month++) {
+                var amountCell = document.createElement("td");
+                var totalMonths = (year - presentYear) * monthsInYear + month;
+                var amount;
+                if (calculationType === "presentValue") {
+                    amount = principal / Math.pow(1 + monthlyInterestRate, totalMonths);
+                } else if (calculationType === "futureValue") {
+                    amount = principal * Math.pow(1 + monthlyInterestRate, totalMonths);
+                }
+                amountCell.textContent = amount.toFixed(2);
+                newRow.appendChild(amountCell);
+            }
+            tableBody.appendChild(newRow);
+        }
+
+        document.getElementById("tvmTable").style.display = "block";
+        document.getElementById("exportButton").style.display = "block";
+
+        // Display result
+        var resultText;
+        if (calculationType === "presentValue") {
+            resultText = "The final amount after " + (totalTerm / monthsInYear) + " years is " + amount.toFixed(2);
+        } else if (calculationType === "futureValue") {
+            resultText = "The final present value after " + (totalTerm / monthsInYear) + " years is " + amount.toFixed(2);
+        }
+        document.getElementById("result").innerHTML = "<p>" + resultText + ".</p>";
+    });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolBox - Your Daily Companion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            text-align: center;
+            margin-top: 50px;
+        }
+        .header img {
+            width: 300px;
+            height: auto;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            flex: 0 1 calc(40% - 40px); /* Ensure even distribution across the page */
+            max-width: 250px; /* Limit maximum width */
+        }
+        .card:hover {
+            transform: scale(1.05);
+        }
+        .card img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .card a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <img src="Family.png" alt="ToolBox Logo">
+</div>
+<div class="container">
+    <div class="card">
+        <a href="MortgageReady.html">
+            <img src="Finance.jpg" alt="Financial Icon">
+            <h2>Mortgage</h2>
+        </a>
+    </div>
+    <div class="card">
+        <a href="Present%20and%20Future%20Value%203.html">
+            <img src="Present%20and%20Futurevalue.png" alt="Present and Future Value">
+            <h2>Present and Future Value</h2>
+        </a>
+    </div>
+    <div class="card">
+        <a href="Retirement%20Plan.html">
+            <img src="Retirenment.png" alt="Retirement Icon">
+            <h2>Retirement Plan</h2>
+        </a>
+    </div>
+    <div class="card">
+        <a href="Investment%20Calculator%203.html">
+            <img src="investment.png" alt="Investment Icon">
+            <h2>Investment</h2>
+        </a>
+    </div>
+    <div class="card">
+        <a href="Loan.html">
+            <img src="Loan.png" alt="Loan Icon">
+            <h2>Loan</h2>
+        </a>
+    </div>
+    <div class="card">
+        <a href="Emergency%20Fund.html">
+            <img src="Emergency.png" alt="Emergency Icon">
+            <h2>Emergency Fund</h2>
+        </a>
+    </div>
+    <div class="card">
+        <a href="../index.html">
+            <img src="LogOut.png" alt="Log Out Icon">
+            <h2>Log Out</h2>
+        </a>
+    </div>
+</div>
+</body>
+</html>
