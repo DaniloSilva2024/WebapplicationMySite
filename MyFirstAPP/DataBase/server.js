@@ -10,6 +10,7 @@ app.use(bodyParser.json());
 // Routes for Emergency Fund
 app.post('/emergency-fund', (req, res) => {
     const {
+        user_id,
         housing,
         utilities,
         groceries,
@@ -22,9 +23,9 @@ app.post('/emergency-fund', (req, res) => {
         progress
     } = req.body;
 
-    db.run(`INSERT INTO EmergencyFund (housing, utilities, groceries, transportation, debt, other, totalExpenses, months, emergencyFundGoal, progress) 
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [housing, utilities, groceries, transportation, debt, other, totalExpenses, months, emergencyFundGoal, progress],
+    db.run(`INSERT INTO EmergencyFund (user_id, housing, utilities, groceries, transportation, debt, other, totalExpenses, months, emergencyFundGoal, progress) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [user_id, housing, utilities, groceries, transportation, debt, other, totalExpenses, months, emergencyFundGoal, progress],
         function (err) {
             if (err) {
                 res.status(500).json({ error: err.message });
@@ -40,6 +41,7 @@ app.post('/emergency-fund', (req, res) => {
 // Routes for Investment Calculator
 app.post('/investment-calculator', (req, res) => {
     const {
+        user_id,
         initialInvestment,
         monthlyContribution,
         years,
@@ -57,6 +59,7 @@ app.post('/investment-calculator', (req, res) => {
 // Routes for Loan Calculator
 app.post('/loan-calculator', (req, res) => {
     const {
+        user_id,
         loanAmount,
         interestRate,
         loanTerm,
@@ -73,6 +76,7 @@ app.post('/loan-calculator', (req, res) => {
 // Routes for Mortgage Calculator
 app.post('/mortgage-calculator', (req, res) => {
     const {
+        user_id,
         loanAmount,
         interestRate,
         loanTerm,
@@ -89,6 +93,7 @@ app.post('/mortgage-calculator', (req, res) => {
 // Routes for Present and Future Value Calculator
 app.post('/present-future-value-calculator', (req, res) => {
     const {
+        user_id,
         presentValue,
         interestRate,
         timePeriod,
@@ -105,6 +110,7 @@ app.post('/present-future-value-calculator', (req, res) => {
 // Routes for Retirement Planner
 app.post('/retirement-planner', (req, res) => {
     const {
+        user_id,
         currentAge,
         retirementAge,
         currentSavings,
@@ -123,3 +129,4 @@ app.post('/retirement-planner', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+

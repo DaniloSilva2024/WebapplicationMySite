@@ -1,82 +1,137 @@
+const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+const bcrypt = require('bcrypt');
 
-// Open database connection
+const app = express();
+app.use(express.json());
+
 const db = new sqlite3.Database(':memory:');
 
-// Create tables
 db.serialize(() => {
-    // Create Emergency Fund table
-    db.run(`CREATE TABLE IF NOT EXISTS EmergencyFund (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    housing REAL,
-    utilities REAL,
-    groceries REAL,
-    transportation REAL,
-    debt REAL,
-    other REAL,
-    totalExpenses REAL,
-    months INTEGER,
-    emergencyFundGoal REAL,
-    progress TEXT
-  )`);
+    // Create Users table
+    db.run(`CREATE TABLE IF NOT EXISTS Users (
+      user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT NOT NULL UNIQUE,
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL
+    )`);
 
-    // Create Investment Calculator table
-    db.run(`CREATE TABLE IF NOT EXISTS InvestmentCalculator (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    investmentYear INTEGER,
-    maturityYear INTEGER,
-    principal REAL,
-    annualInterestRate REAL,
-    taxRate REAL,
-    result TEXT
-  )`);
+    db.serialize(() => {
+        // Create EmergencyFund table
+        db.run(`CREATE TABLE IF NOT EXISTS EmergencyFund (
+      emergency_fund_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      housing REAL,
+      utilities REAL,
+      groceries REAL,
+      transportation REAL,
+      debt REAL,
+      other REAL,
+      totalExpenses REAL,
+      months INTEGER,
+      emergencyFundGoal REAL,
+      progress REAL,
+      FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    )`);
 
-    // Create Loan table
-    db.run(`CREATE TABLE IF NOT EXISTS Loan (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    principal REAL,
-    annualInterestRate REAL,
-    termYears INTEGER,
-    result TEXT
-  )`);
+        // Create InvestmentCalculator table
+        db.run(`CREATE TABLE IF NOT EXISTS InvestmentCalculator (
+      investment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      initialInvestment REAL,
+      monthlyContribution REAL,
+      annualInterestRate REAL,
+      years INTEGER,
+      futureValue REAL,
+      FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    )`);
 
-    // Create Mortgage table
-    db.run(`CREATE TABLE IF NOT EXISTS Mortgage (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    principal REAL,
-    annualInterestRate REAL,
-    periodYears INTEGER,
-    result TEXT
-  )`);
+        // Create Loan table
+        db.run(`CREATE TABLE IF NOT EXISTS Loan (
+      loan_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      principal REAL,
+      annualInterestRate REAL,
+      loanTerm INTEGER,
+      monthlyPayment REAL,
+      totalPayments REAL,
+      totalInterest REAL,
+      FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    )`);
 
-    // Create Present and Future Value table
-    db.run(`CREATE TABLE IF NOT EXISTS PresentFutureValue (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    calculationType TEXT,
-    presentYear INTEGER,
-    futureYear INTEGER,
-    principal REAL,
-    annualInterestRate REAL,
-    result TEXT
-  )`);
+        // Create Mortgage table
+        db.run(`CREATE TABLE IF NOT EXISTS Mortgage (
+      mortgage_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      principal REAL,
+      annualInterestRate REAL,
+      loanTerm INTEGER,
+      monthlyPayment REAL,
+      totalPayments REAL,
+      totalInterest REAL,
+      FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    )`);
 
-    // Create Retirement Plan table
-    db.run(`CREATE TABLE IF NOT EXISTS RetirementPlan (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    desiredRetirementAge INTEGER,
-    annualIncome REAL,
-    housingCost REAL,
-    utilitiesCost REAL,
-    groceriesCost REAL,
-    healthcareCost REAL,
-    transportationCost REAL,
-    travelCost REAL,
-    hobbiesCost REAL,
-    debt REAL,
-    savings REAL,
-    socialSecurity REAL,
-    result TEXT
-  )`);
+        // Create PresentAndFutureValue table
+        db.run(`CREATE TABLE IF NOT EXISTS PresentAndFutureValue (
+      pfv_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      presentValue REAL,
+      annualInterestRate REAL,
+      years INTEGER,
+      futureValue REAL,
+      FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    )`);
+
+        // Create RetirementPlan table
+        db.run(`CREATE TABLE IF NOT EXISTS RetirementPlan (
+      retirement_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER,
+      currentAge INTEGER,
+      annualIncome REAL,
+      percentageSaved REAL,
+      retirementAge INTEGER,
+      retirementSavingsGoal REAL,
+      monthlySavingsRequired REAL,
+      yearsToRetirement INTEGER,
+      retirementBalance REAL,
+      FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    )`);
+    });
+
+
+    // Route to register a new user
+    app.post('/register', async (req, res) => {
+        const { username, email, password } = req.body;
+
+        // Additional validation
+        if (!username || !email || !password) {
+            return res.status(400).json({ error: "Username, email, and password are required." });
+        }
+
+        try {
+            // Hash the password
+            const passwordHash = await bcrypt.hash(password, 10);
+
+            // Insert user data into the Users table
+            db.run(`INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)`,
+                [username, email, passwordHash],
+                function (err) {
+                    if (err) {
+                        return res.status(500).json({ error: err.message });
+                    }
+                    res.json({
+                        message: 'User registered successfully',
+                        user_id: this.lastID
+                    });
+                });
+        } catch (error) {
+            return res.status(500).json({ error: "Failed to register user." });
+        }
+    });
 });
 
-module.exports = db;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
