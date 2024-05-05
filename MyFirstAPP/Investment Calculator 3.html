@@ -179,7 +179,10 @@
         var taxResultText = "The final amount after taxes is $" + finalAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); // Add commas
         document.getElementById("result").innerHTML = "<p>" + resultText + ".</p><p>" + taxResultText + ".</p>";
     }
+    <script>
+        window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 </body>
 </html>
 
