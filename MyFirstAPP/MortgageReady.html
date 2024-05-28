@@ -98,6 +98,7 @@
 
 <script>
     function resetForm() {
+        console.log("Resetting form");
         document.getElementById("mortgageForm").reset();
         document.getElementById("result").innerHTML = "";
         document.getElementById("mortgageTable").style.display = "none";
@@ -105,6 +106,7 @@
     }
 
     function exportToExcel() {
+        console.log("Exporting to Excel");
         var tableHtml = document.getElementById("mortgageTable").outerHTML;
         var blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel' });
         var url = window.URL.createObjectURL(blob);
@@ -119,9 +121,11 @@
 
     document.getElementById("mortgageForm").addEventListener("submit", function(event) {
         event.preventDefault();
-        var principal = parseFloat(document.getElementById("principalInput").value);
-        var annualInterestRate = parseFloat(document.getElementById("interestInput").value);
-        var periodYears = parseFloat(document.getElementById("periodInput").value);
+        console.log("Calculating mortgage");
+
+        var principal = parseFloat(document.getElementById("principalInput").value) || 0;
+        var annualInterestRate = parseFloat(document.getElementById("interestInput").value) || 0;
+        var periodYears = parseFloat(document.getElementById("periodInput").value) || 0;
 
         var monthsInYear = 12;
         var percent = 100;
@@ -151,13 +155,8 @@
         document.getElementById("mortgageTable").style.display = "block";
         document.getElementById("exportButton").style.display = "block";
     });
-    <script>
-        window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>

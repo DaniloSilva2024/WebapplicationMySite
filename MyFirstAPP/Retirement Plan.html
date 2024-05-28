@@ -92,41 +92,42 @@
       <tr>
         <td>Housing</td>
         <td><input type="number" id="housingCost" placeholder="Enter monthly cost"></td>
-        <td id="housingAnnual"> </td>
+        <td id="housingAnnual"></td>
       </tr>
       <tr>
         <td>Utilities</td>
         <td><input type="number" id="utilitiesCost" placeholder="Enter monthly cost"></td>
-        <td id="utilitiesAnnual"> </td>
+        <td id="utilitiesAnnual"></td>
       </tr>
       <tr>
         <td>Groceries</td>
         <td><input type="number" id="groceriesCost" placeholder="Enter monthly cost"></td>
-        <td id="groceriesAnnual"> </td>
+        <td id="groceriesAnnual"></td>
       </tr>
       <tr>
         <td>Healthcare</td>
         <td><input type="number" id="healthcareCost" placeholder="Enter monthly cost"></td>
-        <td id="healthcareAnnual"> </td>
+        <td id="healthcareAnnual"></td>
       </tr>
       <tr>
         <td>Transportation</td>
         <td><input type="number" id="transportationCost" placeholder="Enter monthly cost"></td>
-        <td id="transportationAnnual"> </td>
+        <td id="transportationAnnual"></td>
       </tr>
       <tr>
         <td>Travel</td>
         <td><input type="number" id="travelCost" placeholder="Enter monthly cost"></td>
-        <td id="travelAnnual"> </td>
+        <td id="travelAnnual"></td>
       </tr>
       <tr>
         <td>Hobbies/Entertainment</td>
         <td><input type="number" id="hobbiesCost" placeholder="Enter monthly cost"></td>
-        <td id="hobbiesAnnual"> </td>
-         <tr>
+        <td id="hobbiesAnnual"></td>
+      </tr>
+      <tr>
         <td><strong>Total</strong></td>
-        <td id="totalMonthly"> </td>
-        <td id="totalAnnual"> </td>
+        <td id="totalMonthly"></td>
+        <td id="totalAnnual"></td>
       </tr>
       </tbody>
     </table>
@@ -157,10 +158,8 @@
   <div id="results"></div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
-
-
-  <script>
-    function calculateRetirement() {
+<script>
+  function calculateRetirement() {
     // Gather user input
     var desiredRetirementAge = parseInt(document.getElementById("ageInput").value);
     var annualIncome = parseFloat(document.getElementById("incomeInput").value) * 12;
@@ -176,8 +175,8 @@
 
     // Calculate total annual expenses
     var totalAnnualExpenses = annualHousingCost + annualUtilitiesCost + annualGroceriesCost +
-    annualHealthcareCost + annualTransportationCost + annualTravelCost +
-    annualHobbiesCost;
+            annualHealthcareCost + annualTransportationCost + annualTravelCost +
+            annualHobbiesCost;
 
     // Calculate retirement gap
     var annualGap = annualIncome - totalAnnualExpenses;
@@ -191,61 +190,54 @@
     document.getElementById("results").innerHTML = resultText;
   }
 
-    function resetForm() {
-      // Reset form fields
-      document.getElementById("retirementPlannerForm").reset();
-      // Clear results
-      document.getElementById("results").innerHTML = "";
+  function resetForm() {
+    // Reset form fields
+    document.getElementById("retirementPlannerForm").reset();
+    // Clear results
+    document.getElementById("results").innerHTML = "";
+  }
+
+  function exportToExcel() {
+    // Gather form data
+    var formData = new FormData(document.getElementById("retirementPlannerForm"));
+
+    // Create array to hold form data
+    var data = [];
+
+    // Loop through form data and push key-value pairs to array
+    for (var pair of formData.entries()) {
+      data.push(pair);
     }
-    function exportToExcel() {
-      // Gather form data
-      var formData = new FormData(document.getElementById("retirementPlannerForm"));
 
-      // Create array to hold form data
-      var data = [];
+    // Add calculation results as a new row
+    data.push(["", ""]); // Empty row for spacing
+    data.push(["Retirement Planning Summary:"]);
+    data.push(["Field", "Data"]); // Header row
+    data.push(["Desired Retirement Age", document.getElementById("ageInput").value]);
+    data.push(["Estimated Annual Income", "$" + parseFloat(document.getElementById("incomeInput").value).toFixed(2)]);
+    // Add more fields as needed
 
-      // Loop through form data and push key-value pairs to array
-      for (var pair of formData.entries()) {
-        data.push(pair);
+    // Add calculation results
+    var resultHTML = document.getElementById("results").innerHTML;
+    var resultLines = resultHTML.split("<br>");
+    for (var line of resultLines) {
+      var parts = line.split(": ");
+      if (parts.length === 2) {
+        data.push([parts[0], parts[1]]);
       }
-
-      // Add calculation results as a new row
-      data.push(["", ""]); // Empty row for spacing
-      data.push(["Retirement Planning Summary:"]);
-      data.push(["Field", "Data"]); // Header row
-      data.push(["Desired Retirement Age", document.getElementById("ageInput").value]);
-      data.push(["Estimated Annual Income", "$" + parseFloat(document.getElementById("incomeInput").value).toFixed(2)]);
-      // Add more fields as needed
-
-      // Add calculation results
-      var resultHTML = document.getElementById("results").innerHTML;
-      var resultLines = resultHTML.split("<br>");
-      for (var line of resultLines) {
-        var parts = line.split(": ");
-        if (parts.length === 2) {
-          data.push([parts[0], parts[1]]);
-        }
-      }
-
-      // Convert data to worksheet
-      var ws = XLSX.utils.aoa_to_sheet(data);
-
-      // Save workbook as Excel file
-      var wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Retirement Report");
-
-      // Write file
-      XLSX.writeFile(wb, "retirement_report.xlsx");
     }
-    <script>
-      window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
-  </script>
-<script defer src="/_vercel/speed-insights/script.js"></script>
-<script>
-  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+
+    // Convert data to worksheet
+    var ws = XLSX.utils.aoa_to_sheet(data);
+
+    // Save workbook as Excel file
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Retirement Report");
+
+    // Write file
+    XLSX.writeFile(wb, "retirement_report.xlsx");
+  }
 </script>
-<script defer src="/_vercel/insights/script.js"></script>
-
 </body>
 </html>
 

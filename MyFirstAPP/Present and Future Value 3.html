@@ -113,6 +113,7 @@
 
 <script>
     function resetForm() {
+        console.log("Resetting form");
         document.getElementById("tvmForm").reset();
         document.getElementById("result").innerHTML = "";
         document.getElementById("tvmTable").style.display = "none";
@@ -120,6 +121,7 @@
     }
 
     function exportToExcel() {
+        console.log("Exporting to Excel");
         var tableHtml = document.getElementById("tvmTable").outerHTML;
         var blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel' });
         var url = window.URL.createObjectURL(blob);
@@ -133,11 +135,13 @@
     }
 
     function calculate() {
+        console.log("Calculating Time Value of Money");
+
         var calculationType = document.getElementById("calculationType").value;
-        var presentYear = parseInt(document.getElementById("presentYearInput").value);
-        var futureYear = parseInt(document.getElementById("futureYearInput").value);
-        var principal = parseFloat(document.getElementById("principalInput").value);
-        var annualInterestRate = parseFloat(document.getElementById("interestInput").value);
+        var presentYear = parseInt(document.getElementById("presentYearInput").value) || 0;
+        var futureYear = parseInt(document.getElementById("futureYearInput").value) || 0;
+        var principal = parseFloat(document.getElementById("principalInput").value) || 0;
+        var annualInterestRate = parseFloat(document.getElementById("interestInput").value) || 0;
 
         var monthsInYear = 12;
         var percent = 100;
@@ -146,6 +150,8 @@
 
         var tableBody = document.getElementById("tvmTableBody");
         tableBody.innerHTML = "";
+
+        var amount;
 
         for (var year = presentYear; year <= futureYear; year++) {
             var newRow = document.createElement("tr");
@@ -156,12 +162,13 @@
             for (var month = 1; month <= monthsInYear; month++) {
                 var amountCell = document.createElement("td");
                 var totalMonths = (year - presentYear) * monthsInYear + month;
-                var amount;
+
                 if (calculationType === "presentValue") {
                     amount = principal / Math.pow(1 + monthlyInterestRate, totalMonths);
                 } else if (calculationType === "futureValue") {
                     amount = principal * Math.pow(1 + monthlyInterestRate, totalMonths);
                 }
+
                 amountCell.textContent = amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); // Add commas
                 newRow.appendChild(amountCell);
             }
@@ -171,25 +178,18 @@
         document.getElementById("tvmTable").style.display = "block";
         document.getElementById("exportButton").style.display = "block";
 
-        // Display result
         var resultText;
         if (calculationType === "presentValue") {
             resultText = "The final amount after " + (totalTerm / monthsInYear) + " years is " + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
-
         } else if (calculationType === "futureValue") {
             resultText = "The final future value after " + (totalTerm / monthsInYear) + " years is " + amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
         }
+
         document.getElementById("result").innerHTML = "<p>" + resultText + ".</p>";
+        console.log(resultText);
     }
-    <script>
-        window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
-
-

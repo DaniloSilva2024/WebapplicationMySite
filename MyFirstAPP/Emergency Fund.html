@@ -30,7 +30,7 @@
         }
         input {
             padding: 8px;
-            margin: 10px;
+            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
             width: calc(100% - 22px);
@@ -60,22 +60,22 @@
         <h2>How to Build Your Emergency Fund:</h2>
         <h3>Step 1: Calculate Your Monthly Expenses</h3>
         <label for="housingInput">Housing (rent/mortgage, property taxes, homeowners insurance):</label>
-        <input type="number" id="housingInput" placeholder="Enter amount" required><br>
+        <input type="number" id="housingInput" placeholder="Enter amount" required>
         <label for="utilitiesInput">Utilities (electricity, gas, water, trash):</label>
-        <input type="number" id="utilitiesInput" placeholder="Enter amount" required><br>
+        <input type="number" id="utilitiesInput" placeholder="Enter amount" required>
         <label for="groceriesInput">Groceries and household supplies:</label>
-        <input type="number" id="groceriesInput" placeholder="Enter amount" required><br>
+        <input type="number" id="groceriesInput" placeholder="Enter amount" required>
         <label for="transportationInput">Transportation (car payment, gas, insurance, public transport):</label>
-        <input type="number" id="transportationInput" placeholder="Enter amount" required><br>
+        <input type="number" id="transportationInput" placeholder="Enter amount" required>
         <label for="debtInput">Debt minimum payments:</label>
-        <input type="number" id="debtInput" placeholder="Enter amount" required><br>
+        <input type="number" id="debtInput" placeholder="Enter amount" required>
         <label for="otherInput">Other essentials (childcare, medications, etc.):</label>
-        <input type="number" id="otherInput" placeholder="Enter amount" required><br>
+        <input type="number" id="otherInput" placeholder="Enter amount" required>
         <h3>Total Monthly Expenses: <span id="totalExpenses"></span></h3>
 
         <h3>Step 2: Emergency Fund Goal</h3>
-        <label for="monthsInput">We want to cover <span id="monthsText"></span> months of expenses (choose 3 or 6).</label>
-        <select id="monthsInput" required>
+        <label for="monthsInput">We want to cover <span id="monthsText">3</span> months of expenses (choose 3 or 6).</label>
+        <select id="monthsInput" required onchange="updateMonthsText()">
             <option value="3">3 months</option>
             <option value="6">6 months</option>
         </select>
@@ -85,7 +85,7 @@
 
         <h3>Step 4: Track Your Progress</h3>
         <label for="progressInput">Monitor your emergency fund balance regularly.</label>
-        <input type="text" id="progressInput" placeholder="Enter your progress"><br>
+        <input type="number" id="progressInput" placeholder="Enter your progress">
 
         <button type="button" onclick="calculate()">Calculate</button>
         <button type="button" onclick="resetForm()">Reset</button>
@@ -95,17 +95,22 @@
 
 <script>
     function resetForm() {
+        console.log("Resetting form");
         document.getElementById("emergencyFundForm").reset();
+        document.getElementById("totalExpenses").textContent = "";
+        document.getElementById("emergencyFundGoal").textContent = "";
         document.getElementById("result").innerHTML = "";
+        document.getElementById("monthsText").textContent = "3";
     }
 
     function calculate() {
-        var housing = parseFloat(document.getElementById("housingInput").value);
-        var utilities = parseFloat(document.getElementById("utilitiesInput").value);
-        var groceries = parseFloat(document.getElementById("groceriesInput").value);
-        var transportation = parseFloat(document.getElementById("transportationInput").value);
-        var debt = parseFloat(document.getElementById("debtInput").value);
-        var other = parseFloat(document.getElementById("otherInput").value);
+        console.log("Calculating emergency fund");
+        var housing = parseFloat(document.getElementById("housingInput").value) || 0;
+        var utilities = parseFloat(document.getElementById("utilitiesInput").value) || 0;
+        var groceries = parseFloat(document.getElementById("groceriesInput").value) || 0;
+        var transportation = parseFloat(document.getElementById("transportationInput").value) || 0;
+        var debt = parseFloat(document.getElementById("debtInput").value) || 0;
+        var other = parseFloat(document.getElementById("otherInput").value) || 0;
 
         var totalExpenses = housing + utilities + groceries + transportation + debt + other;
         document.getElementById("totalExpenses").textContent = "$" + totalExpenses.toFixed(2);
@@ -116,9 +121,9 @@
         var emergencyFundGoal = totalExpenses * months;
         document.getElementById("emergencyFundGoal").textContent = emergencyFundGoal.toFixed(2);
 
-        var progress = document.getElementById("progressInput").value;
-        if (progress !== "") {
-            var remaining = emergencyFundGoal - parseFloat(progress);
+        var progress = parseFloat(document.getElementById("progressInput").value) || 0;
+        if (!isNaN(progress)) {
+            var remaining = emergencyFundGoal - progress;
             if (remaining <= 0) {
                 document.getElementById("result").innerHTML = "<p>Congratulations! You've reached your emergency fund goal!</p>";
             } else {
@@ -128,13 +133,16 @@
             document.getElementById("result").innerHTML = "<p>Enter your progress to track your emergency fund.</p>";
         }
     }
-    <script>
-        window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
+
+    function updateMonthsText() {
+        var months = parseInt(document.getElementById("monthsInput").value);
+        document.getElementById("monthsText").textContent = months + " months";
+    }
+
+    // Initialize the monthsText correctly on page load
+    updateMonthsText();
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-</script>
 <script defer src="/_vercel/insights/script.js"></script>
 
 </body>

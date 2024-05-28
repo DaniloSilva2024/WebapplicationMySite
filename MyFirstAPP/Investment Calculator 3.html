@@ -110,6 +110,7 @@
 
 <script>
     function resetForm() {
+        console.log("Resetting form");
         document.getElementById("investmentForm").reset();
         document.getElementById("result").innerHTML = "";
         document.getElementById("investmentTable").style.display = "none";
@@ -117,6 +118,7 @@
     }
 
     function exportToExcel() {
+        console.log("Exporting to Excel");
         var tableHtml = document.getElementById("investmentTable").outerHTML;
         var blob = new Blob([tableHtml], { type: 'application/vnd.ms-excel' });
         var url = window.URL.createObjectURL(blob);
@@ -130,11 +132,12 @@
     }
 
     function calculate() {
-        var investmentYear = parseInt(document.getElementById("investmentYearInput").value);
-        var maturityYear = parseInt(document.getElementById("maturityYearInput").value);
-        var principal = parseFloat(document.getElementById("principalInput").value);
-        var annualInterestRate = parseFloat(document.getElementById("interestInput").value);
-        var taxRate = parseFloat(document.getElementById("taxRateInput").value);
+        console.log("Calculating investment");
+        var investmentYear = parseInt(document.getElementById("investmentYearInput").value) || 0;
+        var maturityYear = parseInt(document.getElementById("maturityYearInput").value) || 0;
+        var principal = parseFloat(document.getElementById("principalInput").value) || 0;
+        var annualInterestRate = parseFloat(document.getElementById("interestInput").value) || 0;
+        var taxRate = parseFloat(document.getElementById("taxRateInput").value) || 0;
 
         var monthsInYear = 12;
         var percent = 100;
@@ -179,15 +182,9 @@
         var taxResultText = "The final amount after taxes is $" + finalAmount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'); // Add commas
         document.getElementById("result").innerHTML = "<p>" + resultText + ".</p><p>" + taxResultText + ".</p>";
     }
-    <script>
-        window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script>
-    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-</script>
 <script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
-
 
